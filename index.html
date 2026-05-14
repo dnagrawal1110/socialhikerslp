@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Hikers — Stop Wasting Your Ad Budget On Dead UGC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#010D32;
+  --green:#1a9e3f;
+  --green-light:#22c55e;
+  --green-bg:#f0fdf4;
+  --red:#dc2626;
+  --red-light:#fee2e2;
+  --orange:#ea580c;
+  --orange-light:#fff7ed;
+  --gold:#d97706;
+  --blue:#2563eb;
+  --blue-light:#eff6ff;
+  --white:#ffffff;
+  --gray:#f8f9fa;
+  --gray2:#f1f3f5;
+  --text:#111827;
+  --text2:#374151;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--text);font-family:'Lato',sans-serif;overflow-x:hidden;font-size:16px;line-height:1.6}
+
+/* STICKY BAR */
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--green);padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,0.15)}
+.sticky-text{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:#fff}
+.sticky-sub{font-size:12px;color:rgba(255,255,255,0.8)}
+.sticky-btn{background:#fff;color:var(--green);font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;padding:10px 24px;border-radius:6px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;text-decoration:none;display:inline-block}
+@media(max-width:600px){.sticky-bar{flex-direction:column;gap:6px;padding:10px 16px}}
+
+/* NOTIFICATION */
+.notif{position:fixed;top:80px;left:12px;z-index:998;background:#fff;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,0.15);max-width:270px;opacity:0;transition:opacity .4s;pointer-events:none;border:1px solid #e5e7eb}
+.notif.show{opacity:1}
+.notif-ico{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#4285f4,#34a853);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.notif strong{display:block;font-size:13px;font-family:'Montserrat',sans-serif;font-weight:700;color:#111}
+.notif span{font-size:11px;color:#666}
+.notif .badge{display:inline-block;background:#eff6ff;color:#1d4ed8;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:4px}
+
+/* TOP STRIP */
+.top-strip{background:var(--navy);text-align:center;padding:10px 20px}
+.top-strip-inner{display:inline-flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+.meta-badge{background:#0866ff;color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;padding:3px 10px;border-radius:4px;letter-spacing:.5px}
+.top-strip span{font-family:'Montserrat',sans-serif;font-weight:900;font-size:13px;color:#fff;letter-spacing:1px}
+.top-strip .orange{color:#fb923c}
+
+/* TRUST BAR */
+.trust-bar{background:#fff;border-bottom:2px solid var(--border);padding:16px 20px}
+.trust-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.trust-avatars{display:flex}
+.t-av{width:34px;height:34px;border-radius:50%;border:2px solid #fff;margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;font-family:'Montserrat',sans-serif}
+.trust-stars{color:#f59e0b;font-size:16px;letter-spacing:1px}
+.trust-text{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--text)}
+
+/* TICKER */
+.ticker{background:var(--green);padding:9px 0;overflow:hidden;white-space:nowrap}
+.ticker-track{display:inline-flex;gap:40px;animation:tick 22s linear infinite}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:1.5px;color:#fff;text-transform:uppercase}
+.ticker-sep{color:rgba(255,255,255,0.4)}
+
+/* HERO */
+.hero{background:#fff;padding:36px 20px 32px;text-align:center;border-bottom:2px solid var(--border)}
+.stop-pill{display:inline-flex;align-items:center;gap:8px;background:var(--red-light);border:1.5px solid rgba(220,38,38,0.4);border-radius:50px;padding:9px 20px;margin-bottom:20px}
+.stop-pill .dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.15}}
+.stop-pill span{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;color:var(--red)}
+.hero h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(26px,6.5vw,48px);line-height:1.12;color:var(--navy);margin-bottom:16px;max-width:680px;margin-left:auto;margin-right:auto}
+.hero h1 .green{color:var(--green)}
+.hero h1 .orange{color:var(--orange)}
+.hero-sub{font-size:16px;color:var(--text2);max-width:560px;margin:0 auto 24px;line-height:1.7}
+.hero-sub strong{color:var(--text);font-weight:700}
+.live-pill{display:inline-flex;align-items:center;gap:8px;background:var(--gray);border:1px solid var(--border);border-radius:50px;padding:8px 18px;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:24px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green-light);animation:blink 1.4s infinite}
+.cta-green{display:inline-block;background:var(--green);color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;padding:17px 40px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 20px rgba(26,158,63,0.35);margin-bottom:10px}
+.cta-green:hover{background:#158235}
+.cta-wa{display:inline-block;color:var(--green);font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;text-decoration:none;margin-left:16px}
+.cta-sub{font-size:12px;color:var(--muted);margin-top:8px}
+.hero-stats{display:flex;justify-content:center;gap:0;margin-top:28px;border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:560px;margin-left:auto;margin-right:auto}
+.h-stat{flex:1;text-align:center;padding:16px 10px;border-right:1px solid var(--border)}
+.h-stat:last-child{border-right:none}
+.h-stat .n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:26px;color:var(--navy)}
+.h-stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* VIDEO */
+.video-section{max-width:640px;margin:0 auto;padding:32px 20px}
+.video-wrap{border-radius:12px;overflow:hidden;border:2px solid var(--border);position:relative;background:#f1f5f9;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer}
+.play-btn{width:72px;height:72px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;box-shadow:0 0 0 10px rgba(26,158,63,0.15)}
+.video-label{font-size:13px;color:var(--muted);letter-spacing:.5px}
+.video-tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.6);border-radius:6px;padding:4px 10px;font-size:11px;color:#fff;font-weight:700;font-family:'Montserrat',sans-serif}
+.tap-pill{position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.6);border-radius:50px;padding:5px 14px;font-size:11px;color:#fff;display:flex;align-items:center;gap:5px}
+.vid-time{position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.7);border-radius:4px;padding:2px 8px;font-size:11px;color:#fff;font-weight:700}
+.last-updated{text-align:center;margin-top:12px}
+.updated-pill{display:inline-flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid #bbf7d0;border-radius:50px;padding:7px 18px;font-size:13px;font-weight:700;color:var(--green)}
+.updated-dot{width:8px;height:8px;border-radius:50%;background:var(--green-light)}
+
+/* SECTION */
+section{padding:48px 20px}
+.container{max-width:680px;margin:0 auto}
+.sec-label{font-family:'Montserrat',sans-serif;font-weight:800;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.sec-h{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(22px,5vw,36px);line-height:1.15;color:var(--navy);margin-bottom:14px}
+.sec-h .green{color:var(--green)}
+.sec-h .red{color:var(--red)}
+.sec-h .orange{color:var(--orange)}
+.sec-body{font-size:15px;color:var(--text2);line-height:1.8;margin-bottom:20px}
+.sec-body strong{color:var(--text);font-weight:700}
+.bg-gray{background:var(--gray)}
+.bg-navy{background:var(--navy)}
+hr.divider{border:none;border-top:2px solid var(--border);margin:0}
+
+/* DM PROOF */
+.dm-intro{text-align:center;margin-bottom:24px}
+.dm-intro h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(18px,4vw,26px);color:var(--text);margin-bottom:6px}
+.dm-intro h2 .green{color:var(--green)}
+.dm-intro p{font-size:15px;color:var(--muted)}
+.dm-wall{display:flex;flex-direction:column;gap:10px}
+.dm-msg{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;position:relative}
+.dm-msg .sender{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.dm-msg .text{font-size:14px;color:var(--text);line-height:1.6}
+.dm-msg .highlight{display:inline-block;background:var(--blue-light);color:var(--blue);font-weight:700;padding:1px 10px;border-radius:50px;font-size:14px}
+.dm-msg .highlight.green{background:var(--green-bg);color:var(--green)}
+.dm-msg .time{font-size:11px;color:#9ca3af;margin-top:8px;text-align:right}
+.dm-msg.green-card{border-color:#bbf7d0;background:var(--green-bg)}
+.dm-msg.blue-card{border-color:#bfdbfe;background:var(--blue-light)}
+.dm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.dm-grid{grid-template-columns:1fr}}
+
+/* PORTFOLIO VIDEOS */
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+@media(max-width:600px){.port-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:380px){.port-grid{grid-template-columns:1fr}}
+.port-card{border-radius:12px;overflow:hidden;border:1.5px solid var(--border);background:#000;position:relative;aspect-ratio:9/16}
+.port-card video{width:100%;height:100%;object-fit:cover;display:block}
+.port-card-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(0,0,0,0.85),transparent);padding:24px 10px 10px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.port-card-tag{position:absolute;top:8px;left:8px;background:var(--green);border-radius:4px;padding:3px 8px;font-size:10px;font-weight:800;color:#fff;font-family:'Montserrat',sans-serif;letter-spacing:.5px}
+.port-play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s}
+.port-play-overlay:hover{background:rgba(0,0,0,0.15)}
+.port-play-btn{width:48px;height:48px;background:rgba(255,255,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--navy);box-shadow:0 4px 16px rgba(0,0,0,0.3)}
+
+/* BRAND LOGOS */
+.brand-logo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+.brand-logo{background:#fff;border:1.5px solid var(--border);border-radius:10px;height:80px;display:flex;align-items:center;justify-content:center;padding:12px;transition:border-color .2s,box-shadow .2s}
+.brand-logo:hover{border-color:var(--green);box-shadow:0 4px 16px rgba(26,158,63,0.12)}
+.brand-logo img{max-width:100%;max-height:52px;object-fit:contain;filter:grayscale(100%);opacity:0.65;transition:filter .2s,opacity .2s}
+.brand-logo:hover img{filter:grayscale(0%);opacity:1}
+@media(max-width:480px){.brand-logo-row{grid-template-columns:repeat(2,1fr)}}
+
+/* SCREENSHOT PROOF */
+.ss-placeholder{background:var(--gray2);border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:32px 20px;text-align:center;cursor:pointer}
+.ss-placeholder .icon{font-size:32px}
+.ss-placeholder .label{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--muted)}
+.ss-placeholder .sub{font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:1px}
+.ss-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+@media(max-width:480px){.ss-grid{grid-template-columns:1fr}}
+.ss-card{border-radius:10px;overflow:hidden;border:1.5px solid var(--border);background:var(--gray2);aspect-ratio:9/16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.ss-card .play-sm{width:40px;height:40px;background:rgba(26,158,63,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.ss-card p{font-size:11px;color:var(--muted);text-align:center;padding:0 12px}
+.ss-card.wide{aspect-ratio:4/3}
+
+/* PAIN */
+.no-more{display:inline-block;background:var(--red);color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;padding:6px 18px;border-radius:50px;margin-bottom:16px;letter-spacing:1px}
+.pain-box{border:1.5px solid rgba(220,38,38,0.3);background:var(--red-light);border-radius:14px;padding:20px 24px}
+.pain-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;color:var(--red);margin-bottom:16px}
+.pain-ul{list-style:none;display:flex;flex-direction:column;gap:0}
+.pain-ul li{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:var(--text2);padding:12px 0;border-bottom:1px solid rgba(220,38,38,0.15);line-height:1.6}
+.pain-ul li:last-child{border-bottom:none}
+.pain-ul li .x{color:var(--red);font-weight:900;font-size:15px;flex-shrink:0;margin-top:2px}
+.pain-ul li strong{color:var(--text);font-weight:700}
+
+/* ROAS COMPARE */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:480px){.compare-row{grid-template-columns:1fr}}
+.c-bad{background:var(--red-light);border:1.5px solid rgba(220,38,38,0.3);border-radius:12px;padding:20px}
+.c-good{background:var(--green-bg);border:1.5px solid rgba(34,197,94,0.4);border-radius:12px;padding:20px}
+.c-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;font-family:'Montserrat',sans-serif}
+.c-bad .c-label{color:var(--red)}
+.c-good .c-label{color:var(--green)}
+.c-num{font-family:'Montserrat',sans-serif;font-weight:900;font-size:44px;line-height:1;margin-bottom:10px}
+.c-bad .c-num{color:var(--red)}
+.c-good .c-num{color:var(--green)}
+.c-ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.c-ul li{font-size:12px;color:var(--text2);display:flex;gap:7px;line-height:1.5}
+
+/* WHAT WE DO */
+.offer-box{background:var(--navy);border-radius:16px;padding:28px;color:#fff;position:relative;overflow:hidden}
+.offer-box::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green),#f59e0b,var(--orange))}
+.offer-big{font-family:'Montserrat',sans-serif;font-weight:900;font-size:80px;color:var(--green-light);line-height:1}
+.offer-sub{font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:20px}
+.offer-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:480px){.offer-cols{grid-template-columns:1fr}}
+.offer-col h4{font-family:'Montserrat',sans-serif;font-weight:800;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--green-light);margin-bottom:12px}
+.offer-ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.offer-ul li{font-size:13px;color:rgba(255,255,255,0.85);display:flex;gap:8px;line-height:1.5}
+.offer-ul li .a{color:var(--green-light);font-weight:900;flex-shrink:0}
+
+/* CHECK LIST */
+.check-list{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.check-list li{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:var(--text);padding:14px 16px;border:1.5px solid var(--border);border-radius:8px;line-height:1.5}
+.check-list li .ck{color:var(--blue);font-weight:900;flex-shrink:0;font-size:16px;margin-top:1px}
+.check-list li .new{background:var(--red);color:#fff;font-size:10px;font-weight:900;padding:2px 7px;border-radius:4px;margin-left:8px;letter-spacing:.5px;font-family:'Montserrat',sans-serif}
+
+/* FORMATS */
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+@media(max-width:480px){.fmt-grid{grid-template-columns:1fr}}
+.fmt{border:1.5px solid var(--border);border-radius:10px;padding:16px;background:#fff}
+.fmt:hover{border-color:var(--green);background:var(--green-bg)}
+.fmt .num{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--orange);margin-bottom:6px;font-family:'Montserrat',sans-serif}
+.fmt h4{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:var(--navy);margin-bottom:4px}
+.fmt p{font-size:12px;color:var(--muted);line-height:1.5}
+.fmt .tag{display:inline-block;background:var(--orange-light);border:1px solid rgba(234,88,12,0.25);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;color:var(--orange);margin-top:8px;font-family:'Montserrat',sans-serif}
+
+/* ANDROMEDA */
+.andromeda-box{background:var(--navy);border-radius:16px;padding:28px;margin-top:20px;color:#fff}
+.andromeda-box h3{font-family:'Montserrat',sans-serif;font-weight:900;font-size:20px;color:var(--green-light);margin-bottom:14px}
+.andromeda-box p{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.8;margin-bottom:12px}
+.andromeda-box p strong{color:#fff}
+.a-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;text-align:center}
+@media(max-width:420px){.a-grid{grid-template-columns:1fr}}
+.a-cell{border-radius:8px;padding:14px}
+.a-cell.bad{background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.3)}
+.a-cell.good{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3)}
+.a-cell.result{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3)}
+.a-cell .n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;line-height:1}
+.a-cell.bad .n{color:#f87171}
+.a-cell.good .n{color:var(--green-light)}
+.a-cell.result .n{color:#fbbf24}
+.a-cell .s{font-size:11px;color:rgba(255,255,255,0.6);margin-top:4px}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
+.result-card{border:1.5px solid var(--border);border-radius:12px;padding:20px;background:#fff}
+.result-card .roas{font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;color:var(--gold)}
+.result-card .brand-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.result-card p{font-size:13px;color:var(--text2);line-height:1.6}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-top:20px}
+.stat{text-align:center;padding:20px 10px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:28px;color:var(--navy)}
+.stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+@media(max-width:480px){.stats-bar{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:none}.stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--border)}}
+
+/* BRANDS GRID PILLS */
+.brands-grid{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;justify-content:center}
+.brand-pill{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--text2);font-family:'Montserrat',sans-serif}
+
+/* PROCESS */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:24px;position:relative}
+.steps::before{content:'';position:absolute;left:19px;top:20px;bottom:20px;width:2px;background:linear-gradient(to bottom,var(--green),rgba(26,158,63,0.1))}
+.step{display:flex;gap:18px;padding:20px 0;align-items:flex-start}
+.step-num{width:38px;height:38px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;z-index:1;position:relative}
+.step h3{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--navy);margin-bottom:6px}
+.step p{font-size:13px;color:var(--muted);line-height:1.6}
+.step p strong{color:var(--text)}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;margin-top:20px;border-radius:12px;overflow:hidden;border:1.5px solid var(--border)}
+.comp-table th{padding:12px 14px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;text-align:left;background:var(--gray);color:var(--muted);border-bottom:1.5px solid var(--border)}
+.comp-table th.us{color:var(--green);background:var(--green-bg)}
+.comp-table td{padding:13px 14px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text2)}
+.comp-table td.us{color:var(--green);font-weight:700;background:rgba(240,253,244,0.5)}
+.comp-table td.them{color:var(--red)}
+.comp-table tr:last-child td{border-bottom:none}
+
+/* TESTIMONIALS */
+.testi-wall{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.testi{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px}
+.testi-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.testi-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;font-family:'Montserrat',sans-serif;color:#fff;flex-shrink:0}
+.testi-name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:var(--text)}
+.testi-brand{font-size:12px;color:var(--muted)}
+.testi-stars{color:#f59e0b;font-size:14px}
+.testi-text{font-size:14px;color:var(--text2);line-height:1.7}
+.testi-result{display:inline-block;background:var(--green-bg);border:1px solid #bbf7d0;border-radius:50px;padding:4px 14px;font-size:13px;font-weight:700;color:var(--green);margin-top:10px;font-family:'Montserrat',sans-serif}
+
+/* SCRIPT TABS */
+.script-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.stab{background:var(--gray2);border:1.5px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:700;transition:.15s}
+.stab.active{background:var(--red-light);border-color:rgba(220,38,38,0.4);color:var(--red)}
+.script-box{background:var(--navy);border-radius:12px;padding:24px;color:#fff}
+.script-hook{font-family:'Montserrat',sans-serif;font-weight:900;font-size:20px;line-height:1.3;border-left:3px solid var(--orange);padding-left:14px;margin-bottom:14px}
+.script-body{font-size:14px;color:rgba(255,255,255,0.8);line-height:2;white-space:pre-line}
+.script-cta{margin-top:14px;padding:12px 16px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:6px;font-size:13px;color:var(--green-light);font-weight:700;font-family:'Montserrat',sans-serif}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:0;margin-top:24px}
+.faq-item{border-bottom:1.5px solid var(--border);padding:18px 0;cursor:pointer}
+.faq-q{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:var(--navy);margin-bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-q .arrow{font-size:18px;color:var(--muted);flex-shrink:0;transition:.2s}
+.faq-a{font-size:14px;color:var(--muted);line-height:1.7;margin-top:12px;display:none}
+.faq-a strong{color:var(--text)}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .arrow{transform:rotate(180deg)}
+
+/* WHO */
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:480px){.who-grid{grid-template-columns:1fr}}
+.who-good{background:var(--green-bg);border:1.5px solid rgba(34,197,94,0.35);border-radius:12px;padding:20px}
+.who-bad{background:var(--red-light);border:1.5px solid rgba(220,38,38,0.3);border-radius:12px;padding:20px}
+.who-title{font-family:'Montserrat',sans-serif;font-weight:900;font-size:12px;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.who-good .who-title{color:var(--green)}
+.who-bad .who-title{color:var(--red)}
+.who-ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.who-ul li{font-size:13px;color:var(--text2);display:flex;gap:8px;line-height:1.5}
+.who-good .who-ul li .ic{color:var(--green);font-weight:900}
+.who-bad .who-ul li .ic{color:var(--red);font-weight:900}
+
+/* FINAL CTA */
+.final-section{background:var(--navy);padding:56px 20px;text-align:center}
+.final-inner{max-width:640px;margin:0 auto}
+.final-inner h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(28px,6vw,48px);line-height:1.1;color:#fff;margin-bottom:14px}
+.final-inner h2 .green{color:var(--green-light)}
+.final-inner p{font-size:16px;color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto 28px;line-height:1.7}
+.final-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(255,255,255,0.1);border-radius:12px;overflow:hidden;margin-top:28px}
+.f-stat{text-align:center;padding:16px 8px;border-right:1px solid rgba(255,255,255,0.1)}
+.f-stat:last-child{border-right:none}
+.f-stat .n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:24px;color:var(--green-light)}
+.f-stat .l{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+@media(max-width:480px){.final-stats{grid-template-columns:repeat(2,1fr)}.f-stat:nth-child(2){border-right:none}.f-stat:nth-child(1),.f-stat:nth-child(2){border-bottom:1px solid rgba(255,255,255,0.1)}}
+.cta-white{display:inline-block;background:#fff;color:var(--navy);font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;padding:17px 40px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;letter-spacing:.3px}
+.cta-wa-white{display:inline-block;color:rgba(255,255,255,0.8);font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;text-decoration:none;margin-top:14px}
+.final-note{font-size:12px;color:rgba(255,255,255,0.45);margin-top:14px}
+
+/* FOOTER */
+footer{background:#000;padding:28px 20px;text-align:center}
+.foot-logo{margin-bottom:12px}
+.foot-logo img{height:52px;width:auto}
+.foot-links{display:flex;justify-content:center;gap:20px;margin-bottom:10px;flex-wrap:wrap}
+.foot-links a{color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none}
+.foot-copy{font-size:12px;color:rgba(255,255,255,0.3)}
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">
+  <div class="notif-ico">📍</div>
+  <div>
+    <strong id="n-name">Rahul from Mumbai</strong>
+    <span id="n-action">booked a free creative audit</span>
+    <div class="badge">✓ Verified</div>
+  </div>
+</div>
+
+<!-- TOP STRIP -->
+<div class="top-strip">
+  <div class="top-strip-inner">
+    <span class="meta-badge">meta</span>
+    <span class="orange">🔥 ANDROMEDA</span>
+    <span>UPDATED — MAY 2026</span>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-avatars">
+      <div class="t-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">R</div>
+      <div class="t-av" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">S</div>
+      <div class="t-av" style="background:linear-gradient(135deg,#10b981,#3b82f6)">A</div>
+      <div class="t-av" style="background:linear-gradient(135deg,#f97316,#eab308)">V</div>
+      <div class="t-av" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)">K</div>
+    </div>
+    <div class="trust-stars">★★★★★</div>
+    <div class="trust-text">Trusted by 50+ Brands Across India</div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">50 VARIATIONS PER SHOOT</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">12 AD FORMATS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">ANDROMEDA-READY UGC</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">4–7X ROAS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">PERFORMANCE NOT AESTHETICS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">FASHION · SAAS · AYURVEDA · D2C</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">50 VARIATIONS PER SHOOT</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">12 AD FORMATS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">ANDROMEDA-READY UGC</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">4–7X ROAS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">PERFORMANCE NOT AESTHETICS</span><span class="ticker-sep"> · </span>
+    <span class="ticker-item">FASHION · SAAS · AYURVEDA · D2C</span><span class="ticker-sep"> · </span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="stop-pill"><span class="dot"></span><span>🛑 STOP Burning Your Meta Ads Budget On Low-Converting UGC</span></div>
+  <h1>
+    Get <span class="green">50 Ad Variations</span><br>
+    That <span class="orange">Feed Andromeda</span> &<br>
+    <span style="color:var(--navy)">3–7X Your ROAS</span>
+  </h1>
+  <p class="hero-sub">
+    If you're a founder spending ₹50K+ on creators and stuck at <strong>0.5x ROAS</strong> — your creators aren't failing you. Your scripting is broken and you're not feeding Meta enough creative volume. Andromeda needs 50+ variations. You're giving it 5.
+  </p>
+  <div class="live-pill">
+    <span class="live-dot"></span>
+    <span id="live-count">47</span>&nbsp;brand founders reading this right now
+  </div>
+  <br>
+  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-green">
+    Book Free Creative Audit →
+  </a>
+  <a href="https://wa.link/io2gtp" target="_blank" class="cta-wa"> 💬 WhatsApp Us</a>
+  <div class="cta-sub">No pitch. Just honest feedback on your current ads. 30 min call.</div>
+  <div class="hero-stats">
+    <div class="h-stat"><div class="n">50+</div><div class="l">Variations/Shoot</div></div>
+    <div class="h-stat"><div class="n">12</div><div class="l">Ad Formats</div></div>
+    <div class="h-stat"><div class="n">4–7x</div><div class="l">ROAS Lift</div></div>
+    <div class="h-stat"><div class="n">6 Yrs</div><div class="l">In Business</div></div>
+  </div>
+</div>
+
+<!-- VIDEO -->
+<div class="video-section">
+  <div class="video-wrap">
+    <div class="play-btn">▶</div>
+    <div class="video-label">[ Add your best client result video here ]</div>
+    <div class="video-tag">🎬 Client Campaign Results</div>
+    <div class="tap-pill">🔇 Tap for sound</div>
+    <div class="vid-time">5:42</div>
+  </div>
+  <div class="last-updated">
+    <div class="updated-pill"><span class="updated-dot"></span> LAST UPDATED: MAY 2026</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- DM PROOF -->
+<section>
+<div class="container">
+  <div class="dm-intro">
+    <h2>I Could Tell You It Works…<br>OR I Could Just <span class="green">SHOW YOU</span> What's Happening In Client DMs</h2>
+    <p>Real messages. Real results. No staging.</p>
+  </div>
+
+  <div class="dm-wall">
+    <div class="dm-msg">
+      <div class="sender">Fashion Brand — Mumbai</div>
+      <div class="text">bhai kya hua yaar… <span class="highlight green">14 sales so far</span> in 2 days of launch. Same product. Just changed scripts to your angles. ROAS went from 0.8 to <span class="highlight green">4.1x</span></div>
+      <div class="time">11:36 pm ✓✓</div>
+    </div>
+
+    <div class="dm-grid">
+      <div class="dm-msg green-card">
+        <div class="sender">Supplement Brand, Delhi</div>
+        <div class="text">We sold <span class="highlight green">30 units!!! 😍</span> in the first week. Pain angle hit HARD. CPA down 60%.</div>
+        <div class="time">8:30 pm</div>
+      </div>
+      <div class="dm-msg blue-card">
+        <div class="sender">Skincare Brand, Bangalore</div>
+        <div class="text">so far <span class="highlight">5 calls booked</span> just from founder angle ad. Not even the product demo. 🤯</div>
+        <div class="time">6:20 pm ✓✓</div>
+      </div>
+      <div class="dm-msg">
+        <div class="text">We're profitable bhai <span class="highlight green">60–65% profit</span> toh aaj bhi hai 💪</div>
+        <div class="time">5:55 pm</div>
+      </div>
+      <div class="dm-msg green-card">
+        <div class="text">your ads are working well! abhi bas conversion dekhna hai 💯</div>
+        <div class="time">6:14 pm ✓✓</div>
+      </div>
+    </div>
+
+    <div class="dm-msg">
+      <div class="sender">Founder — Pune</div>
+      <div class="text">bhai ROAS 4.5x ho gaya. Same budget. Maine sirf creative structure change kiya as you suggested. Ego angle + pain angle combo ne kaam kar diya. 🔥 <span class="highlight green">₹8.2L revenue in 30 days</span></div>
+      <div class="time">11:12 pm ✓✓</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:center">CLIENT RESULTS SCREENSHOTS</div>
+    <div class="ss-grid">
+      <div class="ss-card">
+        <div class="play-sm">▶</div>
+        <p>Fashion Brand — Meta Ads Dashboard<br><span style="color:var(--green);font-weight:700">4.2x ROAS</span></p>
+      </div>
+      <div class="ss-card">
+        <div class="play-sm">▶</div>
+        <p>Supplement Brand — 30 Day Revenue<br><span style="color:var(--green);font-weight:700">₹8.2L</span></p>
+      </div>
+      <div class="ss-card">
+        <div class="play-sm">▶</div>
+        <p>Skincare Brand — CPA Comparison<br><span style="color:var(--green);font-weight:700">₹320 → ₹96</span></p>
+      </div>
+      <div class="ss-card">
+        <div class="play-sm">▶</div>
+        <p>Fashion Brand — Scaling Screenshot<br><span style="color:var(--green);font-weight:700">₹1L/day spend</span></p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">↑ Replace above with actual client result screenshots/videos</div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- PORTFOLIO — WORK BY INDUSTRY -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">Our Work</div>
+  <h2 class="sec-h">Performance Content<br>Across <span class="green">Every Industry.</span></h2>
+  <p class="sec-body">From Ayurveda to SaaS. From cosmetics to quit-smoking. We've engineered winning ad creatives across industries — each built around buyer psychology, not aesthetics.</p>
+
+  <div class="port-grid">
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/Home%20care%20/snoozemore.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">HOME CARE</div>
+      <div class="port-card-label">Sleep &amp; Wellness</div>
+    </div>
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/COSMETIC%20/Copy%20of%2014.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">COSMETICS</div>
+      <div class="port-card-label">Beauty &amp; Skincare</div>
+    </div>
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/AYURVEDA%20/Copy%20of%20ad%201.2.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">AYURVEDA</div>
+      <div class="port-card-label">Herbal &amp; Wellness</div>
+    </div>
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/SAAS/1.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">SAAS</div>
+      <div class="port-card-label">Tech &amp; Software</div>
+    </div>
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/Quit%20smoking/Flow-5.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">HEALTH</div>
+      <div class="port-card-label">Quit Smoking</div>
+    </div>
+
+    <div class="port-card">
+      <video src="DATA%20/BEST%20VIDEO%20/ASTRO%20/Copy%20of%20Kirti%20pod1_.mp4" loop muted playsinline preload="metadata"></video>
+      <div class="port-play-overlay" onclick="togglePortVideo(this)">
+        <div class="port-play-btn">▶</div>
+      </div>
+      <div class="port-card-tag">ASTRO</div>
+      <div class="port-card-label">Astrology &amp; Lifestyle</div>
+    </div>
+
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-green" style="font-size:15px;padding:14px 32px">See More Work — Book A Call →</a>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- BRANDS WE WORK WITH -->
+<section>
+<div class="container">
+  <div class="sec-label">Brands We've Worked With</div>
+  <h2 class="sec-h">From Startups to <span class="green">National Brands</span><br>Across India</h2>
+  <p class="sec-body">We've worked with brands across fashion, fitness, skincare, supplements, real estate, FMCG, and more. These aren't just clients — they're brands that tested their way to ROAS.</p>
+
+  <div class="brand-logo-row">
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/362-3629346_dabur-dabur-india-ltd-logo.png" alt="Dabur">
+    </div>
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/JKCEMENT.NS_BIG-caf767e1.png" alt="JK Cement">
+    </div>
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/GMR_Group_(logo).svg.png" alt="GMR Group">
+    </div>
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/7139593-middle.png" alt="Shemaroo">
+    </div>
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/rapchik-logo-33%20(1).png" alt="Rapchik">
+    </div>
+    <div class="brand-logo">
+      <img src="DATA%20/TOP%20BRAND%20LOGOS/logo%20(1).webp" alt="Brand Partner">
+    </div>
+  </div>
+
+  <div class="brands-grid" style="margin-top:20px">
+    <span class="brand-pill">Fashion &amp; Apparel</span>
+    <span class="brand-pill">Skincare D2C</span>
+    <span class="brand-pill">Fitness &amp; Supplements</span>
+    <span class="brand-pill">Real Estate</span>
+    <span class="brand-pill">Restaurants &amp; F&amp;B</span>
+    <span class="brand-pill">Clinics &amp; Doctors</span>
+    <span class="brand-pill">Luxury &amp; Lifestyle</span>
+    <span class="brand-pill">Ayurveda &amp; Wellness</span>
+    <span class="brand-pill">SaaS &amp; Tech</span>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="n">50+</div><div class="l">Brands Served</div></div>
+    <div class="stat"><div class="n">1000+</div><div class="l">Variations Created</div></div>
+    <div class="stat"><div class="n">10M+</div><div class="l">Views Generated</div></div>
+    <div class="stat"><div class="n">6 Yrs</div><div class="l">In Business</div></div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- PAIN — NO MORE -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">The Real Problem</div>
+  <h2 class="sec-h">You've Already Spent ₹50K+<br>On Creators. And Got <span class="red">0.5x ROAS.</span></h2>
+  <p class="sec-body">You've tried influencers. You've tried agencies. You've tested 15 different creators. Same result. Here's exactly why — and it's not the creator's fault.</p>
+
+  <div class="compare-row">
+    <div class="c-bad">
+      <div class="c-label">What You're Getting</div>
+      <div class="c-num">0.5x</div>
+      <ul class="c-ul">
+        <li><span>✕</span>ChatGPT script → creator → flop</li>
+        <li><span>✕</span>Same angle, different face</li>
+        <li><span>✕</span>"Hey guys, I'm obsessed…"</li>
+        <li><span>✕</span>No hook testing at all</li>
+        <li><span>✕</span>5 ads dying in 5 days</li>
+        <li><span>✕</span>Algorithm starved of signals</li>
+      </ul>
+    </div>
+    <div class="c-good">
+      <div class="c-label">What's Actually Possible</div>
+      <div class="c-num">4–7x</div>
+      <ul class="c-ul">
+        <li><span>✓</span>50 variations per shoot</li>
+        <li><span>✓</span>12 formats tested systematically</li>
+        <li><span>✓</span>Andromeda-optimised volume</li>
+        <li><span>✓</span>Hook engineering, not writing</li>
+        <li><span>✓</span>Thumbstop → hold rate → CPA</li>
+        <li><span>✓</span>Audience feels it. Doesn't skip.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="no-more">NO MORE ✕</div>
+    <div class="pain-box">
+      <div class="pain-title">✕ …And You'll Do It All Without:</div>
+      <ul class="pain-ul">
+        <li><span class="x">✕</span><div>Watching <strong>Meta burn 80% of your budget</strong> on the same 3 ads while competitors run 100+ variations</div></li>
+        <li><span class="x">✕</span><div><strong>ChatGPT scripts that sound like ads.</strong> "I recently discovered this product and I'm obsessed" — audience knows in 1.5 seconds. Trust gone instantly.</div></li>
+        <li><span class="x">✕</span><div>Testing <strong>creators instead of angles.</strong> You gave 10 creators the same broken script. That's not A/B testing — that's copy-pasting failure.</div></li>
+        <li><span class="x">✕</span><div><strong>Gambling your budget on 5–10 ads</strong> while your competitors running 100+ variations systematically find winners before you warm up.</div></li>
+        <li><span class="x">✕</span><div>An agency delivering <strong>12 cinematic reels</strong> that look incredible in their portfolio and give you 0.5 ROAS. Pretty ≠ profitable.</div></li>
+        <li><span class="x">✕</span><div>Panicking every time <strong>ads stop performing</strong> because you have zero pipeline of tested creative ready to take over.</div></li>
+        <li><span class="x">✕</span><div>Using <strong>dead 2021 targeting tactics</strong> in the 2026 Andromeda Meta game where creative volume IS the new targeting.</div></li>
+        <li><span class="x">✕</span><div>Turning ad management into a <strong>constant source of stress and burnout</strong> instead of a predictable growth lever.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:28px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(18px,4vw,26px);line-height:1.25;border-left:4px solid var(--red);padding:16px 20px;background:var(--red-light);border-radius:0 12px 12px 0">
+    "UGC mein words nahi bikte.<br>
+    <span style="font-weight:600;color:var(--muted)">Human behaviour bikta hai.<br>
+    Awkward pauses bikte hain.<br>
+    Real frustration bikti hai."</span>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- WHAT WE DO -->
+<section id="offer">
+<div class="container">
+  <div class="sec-label">What Social Hikers Does</div>
+  <h2 class="sec-h">We Don't Make <span class="red">Content.</span><br>We Engineer <span class="green">Winning Ads.</span></h2>
+  <p class="sec-body">One shoot. 50 variations. 12 creative formats. That's not a content package — that's a testing machine built for Andromeda.</p>
+
+  <div class="offer-box">
+    <div class="offer-big">50</div>
+    <div class="offer-sub">Creative variations from one shoot — upload directly to Meta Ads Manager</div>
+    <div style="display:flex;gap:24px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;color:#fbbf24">12</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Ad Formats</div></div>
+      <div style="text-align:center"><div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;color:#4ade80">4–7x</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">Avg ROAS Lift</div></div>
+      <div style="text-align:center"><div style="font-family:'Montserrat',sans-serif;font-weight:900;font-size:36px;color:#fb923c">10x</div><div style="font-size:11px;color:rgba(255,255,255,0.5)">More test chances</div></div>
+    </div>
+    <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:20px"></div>
+    <div class="offer-cols">
+      <div>
+        <h4>What You Get Per Shoot</h4>
+        <ul class="offer-ul">
+          <li><span class="a">→</span><span><strong>12 base creatives</strong> shot across different formats</span></li>
+          <li><span class="a">→</span><span><strong>50 total variations</strong> — cut, re-hooked, trimmed</span></li>
+          <li><span class="a">→</span><span>Ego, pain, FOMO, founder, comparison angles</span></li>
+          <li><span class="a">→</span><span>UGC + cinematic + meme creative mix</span></li>
+          <li><span class="a">→</span><span>Retention-edited for thumbstop &amp; hold rate</span></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The Performance Layer</h4>
+        <ul class="offer-ul">
+          <li><span class="a">→</span><span>Scripts from <strong>buyer psychology</strong>, not ChatGPT</span></li>
+          <li><span class="a">→</span><span>Hooks engineered for <strong>first 2-second thumbstop</strong></span></li>
+          <li><span class="a">→</span><span>Multiple emotional angles per product</span></li>
+          <li><span class="a">→</span><span><strong>Andromeda compliant</strong> volume strategy</span></li>
+          <li><span class="a">→</span><span>Winning ad <strong>iteration &amp; extension plan</strong></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;font-family:'Montserrat',sans-serif;font-weight:900;font-size:18px;text-align:center;margin-bottom:4px">EVERYTHING YOU GET:</div>
+  <div style="text-align:center;margin-bottom:16px"><hr style="border:none;border-top:1px solid var(--border);max-width:200px;margin:8px auto"></div>
+  <ul class="check-list">
+    <li><span class="ck">✓</span>50–150+ Ad-Ready Creative Variations Per Shoot</li>
+    <li><span class="ck">✓</span>Performance Script Engineering (Buyer Psychology, Not ChatGPT)</li>
+    <li><span class="ck">✓</span>Meta Andromeda Creative Volume Strategy <span class="new">NEW</span></li>
+    <li><span class="ck">✓</span>12 Creative Formats — Every Angle Your Brand Needs</li>
+    <li><span class="ck">✓</span>Hook Engineering for First 2-Second Thumbstop <span class="new">NEW</span></li>
+    <li><span class="ck">✓</span>Retention-Optimised Editing (Hold Rate Focused)</li>
+    <li><span class="ck">✓</span>Multiple Emotional Angles Per Product (Ego, Pain, FOMO, Founder)</li>
+    <li><span class="ck">✓</span>Winning Ad Iteration &amp; Extension Plan <span class="new">NEW</span></li>
+    <li><span class="ck">✓</span>Meta Ads Manager Ready Delivery (All Formats)</li>
+    <li><span class="ck">✓</span>Creator Selection Based on Believability, Not Follower Count</li>
+  </ul>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- ANDROMEDA -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">Meta Andromeda Update</div>
+  <h2 class="sec-h">The Algorithm Changed.<br>Most Brands <span class="red">Didn't.</span></h2>
+  <p class="sec-body">Post-Andromeda, Meta doesn't reward perfect targeting. It rewards <strong>creative volume.</strong> The brand testing 50 creatives beats the brand testing 5 — every single time.</p>
+
+  <div class="andromeda-box">
+    <h3>Why 5 Ads/Month Is A Death Sentence in 2026</h3>
+    <p>Earlier you could run 1–2 ads for weeks. That world is gone. Today Meta needs <strong>fresh hooks, new angles, new emotions</strong> every week to keep learning. When creative stops giving signals — CPA shoots up. ROAS collapses.</p>
+    <p><strong>Nothing changed about your product.</strong> You ran out of creative volume. Competitors testing 50 variations found their winners before you ran out of runway.</p>
+    <div class="a-grid">
+      <div class="a-cell bad"><div class="n">5</div><div class="s">Avg creatives/month most brands test</div></div>
+      <div class="a-cell good"><div class="n">50</div><div class="s">What Social Hikers delivers per shoot</div></div>
+      <div class="a-cell result"><div class="n">10x</div><div class="s">More chances to find a winner</div></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- 12 FORMATS -->
+<section>
+<div class="container">
+  <div class="sec-label">12 Creative Formats</div>
+  <h2 class="sec-h">Every <span class="green">Angle</span> Your Brand Needs<br>To Find <span class="orange">Winners Fast.</span></h2>
+  <p class="sec-body">We systematically attack 12 creative formats — so you always have fresh variations before ad fatigue hits.</p>
+  <div class="fmt-grid">
+    <div class="fmt"><div class="num">FORMAT 01</div><h4>Raw UGC Hook</h4><p>Unpolished, real. Creator to camera. Highest trust format.</p><div class="tag">⚡ HIGH TRUST</div></div>
+    <div class="fmt"><div class="num">FORMAT 02</div><h4>Pain Angle</h4><p>Opens with exact frustration. Pattern interrupt → solution.</p><div class="tag">💥 HIGH CONVERTS</div></div>
+    <div class="fmt"><div class="num">FORMAT 03</div><h4>Ego / Pride Hook</h4><p>"You're probably still doing X…" Triggers buyer identity.</p><div class="tag">🧠 LOW CPM</div></div>
+    <div class="fmt"><div class="num">FORMAT 04</div><h4>Founder POV</h4><p>Founder speaking raw. Highest emotional connection.</p><div class="tag">❤️ HIGH AOV</div></div>
+    <div class="fmt"><div class="num">FORMAT 05</div><h4>Comparison</h4><p>"We tried 4 brands. Here's what worked." Positions without saying it.</p><div class="tag">🥊 HIGH CTR</div></div>
+    <div class="fmt"><div class="num">FORMAT 06</div><h4>Meme / Trend</h4><p>Cultural moment meets product. Viral potential.</p><div class="tag">🔥 VIRAL</div></div>
+    <div class="fmt"><div class="num">FORMAT 07</div><h4>FOMO / Urgency</h4><p>Real urgency without fake countdown timers.</p><div class="tag">⏰ HIGH CVR</div></div>
+    <div class="fmt"><div class="num">FORMAT 08</div><h4>Comment-Style</h4><p>Looks like a DM chain or comment thread. Bypasses ad blindness.</p><div class="tag">👁 THUMBSTOP</div></div>
+    <div class="fmt"><div class="num">FORMAT 09</div><h4>Before / After</h4><p>Emotional, messy, believable transformation. Buyer sees themselves.</p><div class="tag">📈 HIGH ROAS</div></div>
+    <div class="fmt"><div class="num">FORMAT 10</div><h4>Product Reveal</h4><p>Cinematic unboxing-meets-demo. Retention-edited for max hold.</p><div class="tag">🎬 RETENTION</div></div>
+    <div class="fmt"><div class="num">FORMAT 11</div><h4>Objection Killer</h4><p>"I was skeptical too." Kills the reason they don't buy.</p><div class="tag">🛡 HIGH TRUST</div></div>
+    <div class="fmt"><div class="num">FORMAT 12</div><h4>Lifestyle Integration</h4><p>Product in a day-in-the-life. Aspirational but real.</p><div class="tag">✨ BRAND BUILD</div></div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- TESTIMONIALS -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">Client Testimonials</div>
+  <h2 class="sec-h">What Founders Say After<br><span class="green">Testing 50 Variations.</span></h2>
+
+  <div class="ss-grid" style="margin-top:20px">
+    <div class="ss-card wide">
+      <div class="play-sm">▶</div>
+      <p>Founder Testimonial — Fashion Brand<br><span style="color:var(--green);font-weight:700">4.2x ROAS</span></p>
+    </div>
+    <div class="ss-card wide">
+      <div class="play-sm">▶</div>
+      <p>Founder Testimonial — Supplement Brand<br><span style="color:var(--green);font-weight:700">₹8.2L Revenue</span></p>
+    </div>
+  </div>
+
+  <div class="testi-wall">
+    <div class="testi">
+      <div class="testi-header">
+        <div class="testi-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">R</div>
+        <div><div class="testi-name">Rahul M.</div><div class="testi-brand">Founder, Fashion Brand — Mumbai</div></div>
+        <div class="testi-stars" style="margin-left:auto">★★★★★</div>
+      </div>
+      <div class="testi-text">"Was stuck at 0.8x ROAS for 3 months. Changed nothing except the creative strategy. Social Hikers gave us 50 variations. Found the winning ego angle in week 2. Now scaling at ₹1L/day spend."</div>
+      <div class="testi-result">4.2x ROAS ↑</div>
+    </div>
+
+    <div class="testi">
+      <div class="testi-header">
+        <div class="testi-av" style="background:linear-gradient(135deg,#10b981,#3b82f6)">S</div>
+        <div><div class="testi-name">Sneha K.</div><div class="testi-brand">Co-Founder, Skincare Brand — Bangalore</div></div>
+        <div class="testi-stars" style="margin-left:auto">★★★★★</div>
+      </div>
+      <div class="testi-text">"Same product, same Meta budget. Just completely changed our creative volume approach. CPA went from ₹320 to ₹96 in 6 weeks. The before/after angle + objection killer combo crushed it."</div>
+      <div class="testi-result">70% CPA Drop ↓</div>
+    </div>
+
+    <div class="testi">
+      <div class="testi-header">
+        <div class="testi-av" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">A</div>
+        <div><div class="testi-name">Arjun S.</div><div class="testi-brand">Founder, Supplement Brand — Delhi</div></div>
+        <div class="testi-stars" style="margin-left:auto">★★★★★</div>
+      </div>
+      <div class="testi-text">"Previously running 5 creator posts/month. Moved to 50 UGC variations. Pain angle + before-after format outperformed everything we'd ever run. ₹8.2L revenue in the first 30 days with this new structure."</div>
+      <div class="testi-result">₹8.2L / 30 Days ↑</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- SAMPLE SCRIPTS -->
+<section>
+<div class="container">
+  <div class="sec-label">Sample Ad Scripts</div>
+  <h2 class="sec-h">This Is What<br><span class="green">Performance Scripting</span> Looks Like.</h2>
+  <p class="sec-body">Not ChatGPT templates. Not "Hey guys" openers. Buying psychology triggers written specifically for your brand's audience.</p>
+  <div class="script-tabs">
+    <div class="stab active" onclick="showScript(0)">ChatGPT Exposed</div>
+    <div class="stab" onclick="showScript(1)">0.5 ROAS Truth</div>
+    <div class="stab" onclick="showScript(2)">Creator Fake?</div>
+    <div class="stab" onclick="showScript(3)">Andromeda</div>
+    <div class="stab" onclick="showScript(4)">D2C Burning</div>
+  </div>
+  <div class="script-box">
+    <div class="script-hook" id="sc-hook">"Your UGC ads aren't failing.<br>Your ChatGPT scripts are."</div>
+    <div class="script-body" id="sc-body">UGC means user generated content.
+That means it should feel REAL. Not scripted. Not like an ad.
+
+But what are brands doing?
+
+Type a prompt into ChatGPT —
+"write me a high converting UGC script"
+
+Then send that same robotic script to the creator.
+
+"Hey guys, I recently tried this product and honestly I'm obsessed…"
+
+The audience isn't blind.
+
+They know in the first 2 seconds —
+is this creator genuinely talking? Or acting?
+
+The problem isn't the creator.
+The problem is the SCRIPTING.
+
+In UGC, words don't sell.
+Human behaviour sells.
+Awkward pauses sell.
+Real frustration sells.
+
+That's why we rebuilt the entire approach.</div>
+    <div class="script-cta" id="sc-cta">Social Hikers doesn't give creators scripts. We give creators performance.</div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- PROCESS -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">How It Works</div>
+  <h2 class="sec-h">Zero To <span class="green">50 Winning Variations</span><br>In One Month.</h2>
+  <p class="sec-body">Every step built around one goal: give Meta the creative volume it needs to find your winners fast.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div><h3>Brand Discovery Call</h3><p>We understand your product, buyer, current performance, and what's failed. <strong>We start with buyer psychology, not your logo.</strong></p></div></div>
+    <div class="step"><div class="step-num">02</div><div><h3>Creative Strategy &amp; Script Engineering</h3><p>We <strong>engineer buying triggers.</strong> 5–7 core angles: pain, ego, FOMO, founder, objection, comparison, lifestyle — each becomes multiple hooks and variations.</p></div></div>
+    <div class="step"><div class="step-num">03</div><div><h3>Creator Selection &amp; Pre-Production</h3><p>We select creators based on <strong>believability, not follower count.</strong> Everything planned to make content feel genuine, not produced.</p></div></div>
+    <div class="step"><div class="step-num">04</div><div><h3>Production — 12 Formats, Maximum Output</h3><p>All 12 creative formats executed back-to-back. <strong>Everything captured for maximum variation potential.</strong></p></div></div>
+    <div class="step"><div class="step-num">05</div><div><h3>Editing — 50 Variations Delivered</h3><p>Retention-optimised cuts, multiple hook cuts, subtitles, motion graphics. <strong>50 variations ready to upload directly to Meta Ads Manager.</strong></p></div></div>
+    <div class="step"><div class="step-num">06</div><div><h3>Testing Framework &amp; Iteration</h3><p>We track what's working, identify winning angles, and <strong>iterate winners before fatigue hits</strong> — extending winning ads from 7 days to 30+ days.</p></div></div>
+  </div>
+  <div style="margin-top:28px;background:var(--gray2);border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:36px 20px;text-align:center">
+    <div style="width:50px;height:50px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px">▶</div>
+    <p style="font-size:14px;color:var(--muted)">Behind The Scenes — Social Hikers Production</p>
+    <div style="font-size:11px;color:#9ca3af;letter-spacing:1px;text-transform:uppercase">[ Replace with actual BTS video ]</div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPARISON -->
+<section>
+<div class="container">
+  <div class="sec-label">Why Social Hikers</div>
+  <h2 class="sec-h">Other Agencies<br>vs <span class="green">Social Hikers.</span></h2>
+  <p class="sec-body">The difference isn't how good the video looks. The difference is whether it converts.</p>
+  <div style="overflow-x:auto">
+  <table class="comp-table" style="min-width:400px">
+    <thead>
+      <tr>
+        <th style="width:38%">What Matters</th>
+        <th style="width:31%;color:var(--red)">Typical Agency</th>
+        <th class="us" style="width:31%">Social Hikers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Creative output/month</td><td class="them">8–12 polished videos</td><td class="us">50+ test-ready variations</td></tr>
+      <tr><td>Script approach</td><td class="them">ChatGPT template</td><td class="us">Buyer psychology engineering</td></tr>
+      <tr><td>Hook strategy</td><td class="them">One hook per video</td><td class="us">3–5 hooks per concept, tested</td></tr>
+      <tr><td>Andromeda readiness</td><td class="them">Same 5 ads for weeks</td><td class="us">Volume-first, built-in</td></tr>
+      <tr><td>Ad formats used</td><td class="them">1–2 (cinematic reel)</td><td class="us">12 formats per campaign</td></tr>
+      <tr><td>Retention optimisation</td><td class="them">Not measured</td><td class="us">Core part of every edit</td></tr>
+      <tr><td>Creative iteration</td><td class="them">New brief when ad dies</td><td class="us">Extend winners 7→30+ days</td></tr>
+      <tr><td>Optimised for</td><td class="them">Pretty portfolio</td><td class="us">Your ROAS</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- WHO WE WORK WITH -->
+<section class="bg-gray">
+<div class="container">
+  <div class="sec-label">Who We Work With</div>
+  <h2 class="sec-h">We Work With <span class="green">Serious Brands.</span><br>Not Vibe-Based Marketing.</h2>
+  <p class="sec-body">We work best with brands that understand: creative volume wins, one viral reel won't save you, and testing is the only real strategy in 2026.</p>
+  <div class="who-grid">
+    <div class="who-good">
+      <div class="who-title">✓ Good Fit</div>
+      <ul class="who-ul">
+        <li><span class="ic">✓</span>Spending ₹50K+ on Meta already</li>
+        <li><span class="ic">✓</span>Want to test, not just look better</li>
+        <li><span class="ic">✓</span>Committed to monthly consistency</li>
+        <li><span class="ic">✓</span>Fast approvals &amp; communication</li>
+        <li><span class="ic">✓</span>Clear product positioning</li>
+        <li><span class="ic">✓</span>Want to build, not just go viral once</li>
+      </ul>
+    </div>
+    <div class="who-bad">
+      <div class="who-title">✕ Not For You</div>
+      <ul class="who-ul">
+        <li><span class="ic">✕</span>Expecting 1 reel to save the brand</li>
+        <li><span class="ic">✕</span>Want aesthetics over performance</li>
+        <li><span class="ic">✕</span>Slow approvals, long revisions</li>
+        <li><span class="ic">✕</span>Not willing to test and iterate</li>
+        <li><span class="ic">✕</span>One-time content only</li>
+        <li><span class="ic">✕</span>No budget for Meta ads</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- FAQ -->
+<section>
+<div class="container">
+  <div class="sec-label">FAQ</div>
+  <h2 class="sec-h">Questions <span class="green">Answered.</span></h2>
+  <div class="faq-list">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What exactly are "50 variations" from one shoot? <span class="arrow">▼</span></div>
+      <div class="faq-a">From a single shoot, we create <strong>different cuts, hook openings, lengths (6s, 15s, 30s, 60s), formats</strong>. One video becomes 4–5 separate testable ads. 12 base creatives × 4–5 variations = 50+ deliverables ready to upload directly to Meta Ads Manager.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Why not just use ChatGPT to write scripts? <span class="arrow">▼</span></div>
+      <div class="faq-a">ChatGPT writes structure. It doesn't understand <strong>your specific buyer's insecurities, purchase triggers, or what makes them stop scrolling at 11pm.</strong> Every script we write starts with buyer psychology — what they fear, what they desire, what embarrasses them. That's why our UGC feels real and converts.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">We've tried creators before and ROAS was 0.5x. Why would this be different? <span class="arrow">▼</span></div>
+      <div class="faq-a">Because you were testing creators, not angles. Giving 10 creators the same script = 10 versions of the same failed ad. We test <strong>different emotional angles, hooks, and formats</strong> until we find what resonates. That's systematic. What you did before was hope.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How long before we see results? <span class="arrow">▼</span></div>
+      <div class="faq-a">Most brands see improved thumbstop and hold rate in week 2. ROAS improvement depends on your ad spend and how quickly Meta's algorithm learns. Typically <strong>brands see meaningful ROAS improvement by week 4–6.</strong></div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you manage Meta Ads too or just create content? <span class="arrow">▼</span></div>
+      <div class="faq-a">Our core offering is content creation + variation engineering. <strong>Meta Ads Management is available as an add-on.</strong> We can also train your media buyer on how to structure testing using our deliverables.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">We're not a D2C brand — can you still help? <span class="arrow">▼</span></div>
+      <div class="faq-a">Yes. The principles apply to any brand running Meta ads — restaurants, real estate, clinics, SaaS, personal brands. <strong>If you're spending on ads and not testing enough creative volume — we can help.</strong></div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What are your packages and pricing? <span class="arrow">▼</span></div>
+      <div class="faq-a">We customise every engagement based on your brand's needs, current ad spend, and goals. <strong>Book a free 30-minute discovery call</strong> and we'll walk you through what makes sense for your brand specifically. No packages on the website — we don't believe in one-size-fits-all.</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="divider">
+
+<!-- FINAL CTA -->
+<div class="final-section" id="contact">
+<div class="final-inner">
+  <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:14px">Ready To Fix This?</div>
+  <h2>
+    Stop Hoping.<br>
+    <span class="green">Start Testing.</span>
+  </h2>
+  <p>If you're spending money on ads and not getting the ROAS you want — book a free 30-minute creative audit. We'll tell you exactly what's broken and how to fix it. No pitch. No fluff.</p>
+  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-white">Book Free Creative Audit →</a>
+  <br>
+  <a href="https://wa.link/io2gtp" target="_blank" class="cta-wa-white">💬 WhatsApp Us Instead</a>
+  <div class="final-note">Honest feedback on what's killing your ROAS. 30 minutes. Zero commitment.</div>
+  <div class="final-stats">
+    <div class="f-stat"><div class="n">Free</div><div class="l">Creative Audit</div></div>
+    <div class="f-stat"><div class="n">30 Min</div><div class="l">Discovery Call</div></div>
+    <div class="f-stat"><div class="n">No BS</div><div class="l">Honest Feedback</div></div>
+    <div class="f-stat"><div class="n">2 Hr</div><div class="l">Reply Time</div></div>
+  </div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">
+    <img src="DATA%20/SOCIAL%20HIKERS%20LOGO%20/png.png" alt="Social Hikers">
+  </div>
+  <div class="foot-links">
+    <a href="https://www.instagram.com/socialhikers.in/" target="_blank">Instagram</a>
+    <a href="https://wa.link/io2gtp" target="_blank">WhatsApp</a>
+    <a href="tel:+917017979071">+91 70179 79071</a>
+    <a href="https://socialhikers.in" target="_blank">Website</a>
+  </div>
+  <div class="foot-copy">© 2026 Social Hikers · Roorkee, India · Est. 2019</div>
+</footer>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar">
+  <div>
+    <div class="sticky-text">🚀 Free Creative Audit — Find What's Killing Your ROAS</div>
+    <div class="sticky-sub">50+ Brands Served · No Pitch · 30 Min Call</div>
+  </div>
+  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="sticky-btn">Book Free Audit →</a>
+</div>
+
+<script>
+const scripts=[
+  {hook:'"Your UGC ads aren\'t failing.\nYour ChatGPT scripts are."',body:`UGC means user generated content.
+That means it should feel REAL. Not scripted. Not like an ad.
+
+But what are brands doing?
+
+Type a prompt into ChatGPT —
+"write me a high converting UGC script"
+
+Then send that same robotic script to the creator.
+
+"Hey guys, I recently tried this product and honestly I'm obsessed…"
+
+The audience isn't blind.
+
+They know in the first 2 seconds —
+is this creator genuinely talking? Or acting?
+
+The problem isn't the creator.
+The problem is the SCRIPTING.
+
+In UGC, words don't sell.
+Human behaviour sells.
+Awkward pauses sell.
+Real frustration sells.
+
+That's why we rebuilt the entire approach.`,cta:"Social Hikers doesn't give creators scripts. We give creators performance."},
+  {hook:'"You spent ₹50K+ on creators.\nAnd got back 0.5x ROAS."',body:`Your product isn't the problem.
+Your creator selection isn't the problem.
+Your entire UGC system is broken.
+
+You DM random influencers.
+Send them the product.
+They make a cute video.
+You run it as an ad. Done.
+
+No hook testing.
+No retention analysis.
+No thumbstop ratio.
+No emotional angle testing.
+
+And then brands say — "UGC doesn't work."
+
+Wrong. Random UGC doesn't work.
+Performance UGC works.
+
+That's why we don't just make videos.
+We create multiple variations — different hooks, emotions, retention patterns.
+So the algorithm learns exactly what hits.`,cta:"Social Hikers' goal isn't to make content. It's to extract winning ads."},
+  {hook:'"Your creator looks fake.\nEvery line rehearsed. Every reaction forced."',body:`And the audience can see it.
+
+In 2026, the audience doesn't want cinematic shots.
+They want believable content.
+
+Believable content doesn't mean low quality.
+It means psychologically correct content.
+
+Where the creator doesn't look like an actor. Looks like a customer.
+Where the problem doesn't feel scripted. Feels personal.
+
+Most agencies just hire creators.
+We hire buyer psychology.
+
+That's why we don't give you one video.
+We give you multiple emotional variations:
+
+Ego angle. Pain angle. Comparison angle.
+FOMO angle. Founder angle.
+
+So before ad fatigue hits, the next winner is already ready.`,cta:"Making UGC is easy. Making winning UGC is a different game."},
+  {hook:'"You\'re running Meta Ads in 2026.\nSo you know about Andromeda. Right?"',body:`Then you know that one winning ad doesn't come from luck.
+It comes from testing.
+
+But here's the funny part.
+
+Brands test creators — not angles.
+Same script. Same structure. Same emotion. Just a different face.
+
+And then they say — "This creator's face doesn't convert."
+
+Bro. The face isn't the problem. The creative strategy is.
+
+First sentence is weak. Pattern interrupt is weak.
+Emotional trigger is weak.
+
+We solve this exactly.
+We engineer ads for Andromeda's testing structure.
+
+So one product gives you 10+ angles.
+And the winning ad comes systematically — not accidentally.`,cta:"The difference isn't in the creator. It's in the scripting psychology."},
+  {hook:'"If you\'re a founder…\nyou\'re probably burning money on UGC right now."',body:`You paid ₹15,000 to one creator.
+₹20,000 to another.
+Then ran the ads on Meta.
+
+And now you're saying — "UGC is saturated."
+
+No. Your creative strategy is weak.
+
+You're collecting content.
+We build conversion assets.
+
+We look at:
+Does the thumb stop in the first 2 seconds?
+Which line causes retention to drop?
+Which emotion triggers comments?
+Which hook lowers CPM?
+
+This is what actual UGC looks like.
+
+Pretty creator ≠ winning ad.
+
+Most agencies hire creators.
+We hire buyer psychology.`,cta:"Shooting UGC is easy. Profitable UGC is a different business."}
+];
+
+function showScript(i){
+  document.getElementById('sc-hook').innerHTML=scripts[i].hook.replace(/\n/g,'<br>');
+  document.getElementById('sc-body').textContent=scripts[i].body;
+  document.getElementById('sc-cta').textContent=scripts[i].cta;
+  document.querySelectorAll('.stab').forEach((t,j)=>t.classList.toggle('active',i===j));
+}
+
+function toggleFaq(el){el.classList.toggle('open')}
+
+function togglePortVideo(overlay){
+  const card=overlay.parentElement;
+  const video=card.querySelector('video');
+  const btn=overlay.querySelector('.port-play-btn');
+  if(video.paused){
+    video.muted=false;
+    video.play();
+    btn.textContent='⏸';
+    btn.style.background='rgba(255,255,255,0.7)';
+  } else {
+    video.pause();
+    btn.textContent='▶';
+    btn.style.background='rgba(255,255,255,0.9)';
+  }
+}
+
+// Live count
+let cnt=47;
+setInterval(()=>{cnt=Math.max(28,Math.min(110,cnt+(Math.random()>.5?1:-1)*Math.floor(Math.random()*3)));document.getElementById('live-count').textContent=cnt;},4500);
+
+// Notifications
+const ndata=[
+  {n:'Rahul from Mumbai',a:'booked a free creative audit'},
+  {n:'Sneha from Delhi',a:'just booked their discovery call'},
+  {n:'Arjun from Bangalore',a:'started working with Social Hikers'},
+  {n:'Priya from Pune',a:'booked a free creative audit'},
+  {n:'Vikram from Hyderabad',a:'requested a creative audit'},
+  {n:'Ananya from Chennai',a:'just booked a call — skincare brand'},
+];
+let ni=0;
+function showNotif(){
+  const el=document.getElementById('notif');
+  const d=ndata[ni%ndata.length];
+  document.getElementById('n-name').textContent=d.n;
+  document.getElementById('n-action').textContent=d.a;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),4200);
+  ni++;
+}
+setTimeout(()=>{showNotif();setInterval(showNotif,8000);},3500);
+</script>
+</body>
+</html>
