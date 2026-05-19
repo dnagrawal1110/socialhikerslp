@@ -1446,12 +1446,12 @@ function submitLeadForm(e){
   // Fire Meta Lead event immediately
   if(typeof fbq!=='undefined') fbq('track','Lead');
 
-  // Send to Google Sheet via GET + query params (avoids Apps Script POST redirect issue)
+  // Send to Google Sheet via Image pixel — zero CORS issues, same as tracking pixels
   const sendData=()=>{
     if(GSHEET_URL && GSHEET_URL!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
       const url=new URL(GSHEET_URL);
       Object.entries(payload).forEach(([k,v])=>url.searchParams.set(k,v));
-      fetch(url.toString(),{method:'GET',mode:'no-cors'}).catch(()=>{});
+      new Image().src=url.toString(); // fires GET silently, Apps Script receives e.parameter
     }
     // Show Thank You step
     document.getElementById('lf-form-step').style.display='none';
