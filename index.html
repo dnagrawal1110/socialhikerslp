@@ -1446,11 +1446,12 @@ function submitLeadForm(e){
   // Fire Meta Lead event immediately
   if(typeof fbq!=='undefined') fbq('track','Lead');
 
-  // Send to Google Sheet
+  // Send to Google Sheet via GET + query params (avoids Apps Script POST redirect issue)
   const sendData=()=>{
     if(GSHEET_URL && GSHEET_URL!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
-      fetch(GSHEET_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)})
-        .catch(()=>{}); // no-cors: avoids CORS preflight, data still reaches Apps Script
+      const url=new URL(GSHEET_URL);
+      Object.entries(payload).forEach(([k,v])=>url.searchParams.set(k,v));
+      fetch(url.toString(),{method:'GET',mode:'no-cors'}).catch(()=>{});
     }
     // Show Thank You step
     document.getElementById('lf-form-step').style.display='none';
