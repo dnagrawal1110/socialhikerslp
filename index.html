@@ -337,26 +337,6 @@ hr.divider{border:none;border-top:2px solid var(--border);margin:0}
 .final-note{font-size:12px;color:rgba(255,255,255,0.45);margin-top:14px}
 
 /* POPUP MODAL */
-.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .35s}
-.popup-overlay.active{opacity:1;pointer-events:all}
-.popup-box{background:#fff;border-radius:20px;max-width:420px;width:100%;overflow:hidden;position:relative;transform:translateY(24px) scale(0.97);transition:transform .35s}
-.popup-overlay.active .popup-box{transform:translateY(0) scale(1)}
-.popup-top{background:var(--navy);padding:28px 28px 22px;text-align:center;position:relative}
-.popup-top::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),#f59e0b,var(--orange))}
-.popup-close{position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
-.popup-close:hover{background:rgba(255,255,255,0.25)}
-.popup-eyebrow{font-family:'Montserrat',sans-serif;font-weight:800;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green-light);margin-bottom:10px}
-.popup-headline{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(20px,5vw,26px);color:#fff;line-height:1.15;margin-bottom:8px}
-.popup-headline span{color:var(--green-light)}
-.popup-subline{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5}
-.popup-body{padding:24px 28px 28px;text-align:center}
-.popup-perks{display:flex;justify-content:center;gap:18px;margin-bottom:20px;flex-wrap:wrap}
-.popup-perk{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:5px}
-.popup-perk .pk-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
-.popup-cta{display:block;background:var(--green);color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:16px;padding:15px 32px;border-radius:8px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 18px rgba(26,158,63,0.3);margin-bottom:12px}
-.popup-cta:hover{background:#158235}
-.popup-wa{display:block;font-size:13px;color:var(--green);font-weight:700;text-decoration:none}
-.popup-dismiss{display:block;font-size:11px;color:#9ca3af;margin-top:10px;cursor:pointer;text-decoration:underline;background:none;border:none}
 
 /* FOOTER */
 footer{background:#000;padding:28px 20px;text-align:center}
@@ -485,28 +465,6 @@ src="https://www.facebook.com/tr?id=1464648888010717&ev=PageView&noscript=1"/></
   </div>
 </div>
 
-<!-- BOOKING POPUP -->
-<div class="popup-overlay" id="bookingPopup" onclick="if(event.target===this)closePopup()">
-  <div class="popup-box">
-    <div class="popup-top">
-      <button class="popup-close" onclick="closePopup()">✕</button>
-      <div class="popup-eyebrow">Limited Spots This Month</div>
-      <div class="popup-headline">Your Ads Are Losing Money<br><span>Every Day You Wait.</span></div>
-      <div class="popup-subline">Book a free 30-min creative audit. We'll show you exactly what's killing your ROAS — and how to fix it.</div>
-    </div>
-    <div class="popup-body">
-      <div class="popup-perks">
-        <div class="popup-perk"><span class="pk-dot"></span>100% Free</div>
-        <div class="popup-perk"><span class="pk-dot"></span>No Pitch</div>
-        <div class="popup-perk"><span class="pk-dot"></span>30 Minutes</div>
-        <div class="popup-perk"><span class="pk-dot"></span>Honest Feedback</div>
-      </div>
-      <button class="popup-cta" onclick="closePopup();openLF()">Book Free Creative Audit →</button>
-      <a href="https://wa.link/io2gtp" target="_blank" class="popup-wa">💬 Or WhatsApp Us Instead</a>
-      <button class="popup-dismiss" onclick="closePopup()">No thanks, I'll keep burning budget</button>
-    </div>
-  </div>
-</div>
 
 <!-- NOTIFICATION -->
 <div class="notif" id="notif">
@@ -1452,6 +1410,7 @@ function openLF(){
 function closeLF(){
   document.getElementById('leadFormOverlay').classList.remove('active');
   document.body.style.overflow='';
+  sessionStorage.setItem('popupSeen','1');
 }
 
 function submitLeadForm(e){
@@ -1502,14 +1461,9 @@ function submitLeadForm(e){
   sendData();
 }
 
-// Popup
-function closePopup(){
-  const p=document.getElementById('bookingPopup');
-  p.classList.remove('active');
-  sessionStorage.setItem('popupSeen','1');
-}
+// 4-second popup → lead form
 if(!sessionStorage.getItem('popupSeen')){
-  setTimeout(()=>document.getElementById('bookingPopup').classList.add('active'),4000);
+  setTimeout(openLF, 4000);
 }
 
 // Live count
