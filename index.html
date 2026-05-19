@@ -1449,8 +1449,8 @@ function submitLeadForm(e){
   // Send to Google Sheet
   const sendData=()=>{
     if(GSHEET_URL && GSHEET_URL!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
-      fetch(GSHEET_URL,{method:'POST',body:JSON.stringify(payload)})
-        .catch(()=>{}); // fail silently — UX not blocked
+      fetch(GSHEET_URL,{method:'POST',mode:'no-cors',body:JSON.stringify(payload)})
+        .catch(()=>{}); // no-cors: avoids CORS preflight, data still reaches Apps Script
     }
     // Show Thank You step
     document.getElementById('lf-form-step').style.display='none';
