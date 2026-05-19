@@ -365,9 +365,125 @@ footer{background:#000;padding:28px 20px;text-align:center}
 .foot-links{display:flex;justify-content:center;gap:20px;margin-bottom:10px;flex-wrap:wrap}
 .foot-links a{color:rgba(255,255,255,0.5);font-size:13px;text-decoration:none}
 .foot-copy{font-size:12px;color:rgba(255,255,255,0.3)}
+
+/* ── LEAD FORM MODAL ── */
+.lf-overlay{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.78);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+.lf-overlay.active{opacity:1;pointer-events:all}
+.lf-box{background:#fff;border-radius:16px;width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,0.35);position:relative;max-height:92vh;overflow-y:auto}
+.lf-head{background:var(--navy);padding:26px 28px 18px;text-align:center}
+.lf-head h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:19px;color:#fff;margin-bottom:6px;line-height:1.3}
+.lf-head p{font-size:13px;color:rgba(255,255,255,0.72);line-height:1.5}
+.lf-close{position:absolute;top:11px;right:14px;background:none;border:none;color:rgba(255,255,255,0.65);font-size:22px;cursor:pointer;line-height:1;padding:4px;z-index:2}
+.lf-close:hover{color:#fff}
+.lf-body{padding:22px 28px}
+.lf-field{margin-bottom:14px}
+.lf-field label{display:block;font-size:11px;font-weight:800;font-family:'Montserrat',sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text2);margin-bottom:5px}
+.lf-field label .req{color:var(--red)}
+.lf-field input,.lf-field select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Lato',sans-serif;color:var(--text);outline:none;transition:border .18s;background:#fff;appearance:none;-webkit-appearance:none}
+.lf-field input:focus,.lf-field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,158,63,0.12)}
+.lf-field input.err-input,.lf-field select.err-input{border-color:var(--red)}
+.lf-err-msg{font-size:11px;color:var(--red);margin-top:3px;display:none}
+.lf-submit{width:100%;background:var(--green);color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:16px;padding:15px;border:none;border-radius:8px;cursor:pointer;letter-spacing:.3px;transition:background .2s;margin-top:6px}
+.lf-submit:hover{background:#158235}
+.lf-submit:disabled{opacity:.6;cursor:not-allowed}
+.lf-foot-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px}
+/* Thank You step */
+.lf-ty{padding:40px 28px 36px;text-align:center}
+.lf-ty .ty-ico{font-size:54px;margin-bottom:14px;animation:popIn .4s ease}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.lf-ty h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:22px;color:var(--navy);margin-bottom:10px}
+.lf-ty p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.ty-book-btn{display:block;background:var(--green);color:#fff;font-family:'Montserrat',sans-serif;font-weight:900;font-size:16px;padding:16px 24px;border-radius:8px;text-decoration:none;letter-spacing:.3px;box-shadow:0 4px 18px rgba(26,158,63,0.35);margin-bottom:12px;transition:background .2s}
+.ty-book-btn:hover{background:#158235}
+.ty-later{font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;display:block}
+@media(max-width:480px){.lf-body{padding:18px 18px}.lf-head{padding:22px 18px 16px}}
 </style>
 </head>
 <body>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1464648888010717');
+fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1464648888010717&ev=PageView&noscript=1"/></noscript>
+
+<!-- LEAD FORM MODAL -->
+<div class="lf-overlay" id="leadFormOverlay" onclick="if(event.target===this)closeLF()">
+  <div class="lf-box">
+    <button class="lf-close" onclick="closeLF()">✕</button>
+
+    <!-- Step 1: Form -->
+    <div id="lf-form-step">
+      <div class="lf-head">
+        <h2>Claim Your Free Creative Audit</h2>
+        <p>Tell us about your brand — we'll confirm your spot and show you exactly what's killing your ROAS.</p>
+      </div>
+      <div class="lf-body">
+        <form id="leadForm" onsubmit="submitLeadForm(event)" novalidate>
+          <div class="lf-field">
+            <label>Your Name <span class="req">*</span></label>
+            <input type="text" id="lf-name" placeholder="Full name" autocomplete="name">
+            <div class="lf-err-msg" id="err-name">Please enter your name</div>
+          </div>
+          <div class="lf-field">
+            <label>Phone Number <span class="req">*</span></label>
+            <input type="tel" id="lf-phone" placeholder="+91 98765 43210" autocomplete="tel">
+            <div class="lf-err-msg" id="err-phone">Please enter a valid phone number</div>
+          </div>
+          <div class="lf-field">
+            <label>Email</label>
+            <input type="email" id="lf-email" placeholder="you@brand.com" autocomplete="email">
+          </div>
+          <div class="lf-field">
+            <label>Brand Name</label>
+            <input type="text" id="lf-brand" placeholder="Your brand name">
+          </div>
+          <div class="lf-field">
+            <label>Brand Website <span class="req">*</span></label>
+            <input type="url" id="lf-website" placeholder="https://yourbrand.com" autocomplete="url">
+            <div class="lf-err-msg" id="err-website">Please enter your brand website URL</div>
+          </div>
+          <div class="lf-field">
+            <label>Monthly Ad Spend</label>
+            <select id="lf-adspend">
+              <option value="">— Select your monthly spend —</option>
+              <option value="₹1L - ₹3L">₹1L – ₹3L / month</option>
+              <option value="₹3L - ₹7L">₹3L – ₹7L / month</option>
+              <option value="₹7L - ₹15L">₹7L – ₹15L / month</option>
+              <option value="₹15L+">₹15L+ / month</option>
+            </select>
+          </div>
+          <button type="submit" class="lf-submit" id="lf-submit-btn">Get My Free Audit →</button>
+          <div class="lf-foot-note">🔒 No spam. Your info goes directly to our team.</div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Step 2: Thank You -->
+    <div id="lf-ty-step" style="display:none">
+      <div class="lf-ty">
+        <div class="ty-ico">🎉</div>
+        <h2>You're In!</h2>
+        <p>We've got your details and our team will reach out shortly to confirm your free audit slot.<br><strong>Meanwhile, lock in a time that works for you:</strong></p>
+        <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives"
+           target="_blank" class="ty-book-btn"
+           onclick="fbq('track','Schedule')">📅 Book Your Call Now →</a>
+        <span class="ty-later" onclick="closeLF()">I'll wait for your team to call me</span>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <!-- BOOKING POPUP -->
 <div class="popup-overlay" id="bookingPopup" onclick="if(event.target===this)closePopup()">
@@ -385,7 +501,7 @@ footer{background:#000;padding:28px 20px;text-align:center}
         <div class="popup-perk"><span class="pk-dot"></span>30 Minutes</div>
         <div class="popup-perk"><span class="pk-dot"></span>Honest Feedback</div>
       </div>
-      <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="popup-cta" onclick="closePopup()">Book Free Creative Audit →</a>
+      <button class="popup-cta" onclick="closePopup();openLF()">Book Free Creative Audit →</button>
       <a href="https://wa.link/io2gtp" target="_blank" class="popup-wa">💬 Or WhatsApp Us Instead</a>
       <button class="popup-dismiss" onclick="closePopup()">No thanks, I'll keep burning budget</button>
     </div>
@@ -460,9 +576,9 @@ footer{background:#000;padding:28px 20px;text-align:center}
     <span id="live-count">47</span>&nbsp;brand founders reading this right now
   </div>
   <br>
-  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-green">
+  <button onclick="openLF()" class="cta-green">
     Book Free Creative Audit →
-  </a>
+  </button>
   <a href="https://wa.link/io2gtp" target="_blank" class="cta-wa"> 💬 WhatsApp Us</a>
   <div class="cta-sub">No pitch. Just honest feedback on your current ads. 30 min call.</div>
   <div class="hero-stats">
@@ -615,7 +731,7 @@ footer{background:#000;padding:28px 20px;text-align:center}
   </div>
 
   <div style="text-align:center;margin-top:20px">
-    <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-green" style="font-size:15px;padding:14px 32px">See More Work — Book A Call →</a>
+    <button onclick="openLF()" class="cta-green" style="font-size:15px;padding:14px 32px">See More Work — Book A Call →</button>
   </div>
 </div>
 </section>
@@ -1085,7 +1201,7 @@ That's why we rebuilt the entire approach.</div>
     <span class="green">Start Testing.</span>
   </h2>
   <p>If you're spending money on ads and not getting the ROAS you want — book a free 30-minute creative audit. We'll tell you exactly what's broken and how to fix it. No pitch. No fluff.</p>
-  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="cta-white">Book Free Creative Audit →</a>
+  <button onclick="openLF()" class="cta-white">Book Free Creative Audit →</button>
   <br>
   <a href="https://wa.link/io2gtp" target="_blank" class="cta-wa-white">💬 WhatsApp Us Instead</a>
   <div class="final-note">Honest feedback on what's killing your ROAS. 30 minutes. Zero commitment.</div>
@@ -1118,7 +1234,7 @@ That's why we rebuilt the entire approach.</div>
     <div class="sticky-text">🚀 Free Creative Audit — Find What's Killing Your ROAS</div>
     <div class="sticky-sub">50+ Brands Served · No Pitch · 30 Min Call</div>
   </div>
-  <a href="https://social-hikers.dayschedule.com/free-discovery-session-creatives" target="_blank" class="sticky-btn">Book Free Audit →</a>
+  <button onclick="openLF()" class="sticky-btn">Book Free Audit →</button>
 </div>
 
 <script>
@@ -1301,6 +1417,89 @@ function toggleBtsMute() {
     v.muted = true;
     if (badge) badge.textContent = '🔇 TAP FOR SOUND';
   }
+}
+
+// ── LEAD FORM ──────────────────────────────────────────────────────────────
+// ⚠️  Replace the URL below with your Google Apps Script Web App URL
+// (see setup instructions at the bottom of this comment block)
+//
+// APPS SCRIPT CODE — paste this into script.google.com, save, then Deploy > New Deployment
+// (Web App, Execute as: Me, Who has access: Anyone) and copy the URL here:
+//
+// function doPost(e) {
+//   const ss = SpreadsheetApp.openById('1mgYxrjKQtq5zcSSHkLea-5lm-LI3XDXDnp-YjnTuW8M');
+//   const sheet = ss.getActiveSheet();
+//   if (sheet.getLastRow()===0) {
+//     sheet.appendRow(['Timestamp','Name','Phone','Email','Brand Name','Brand Website','Monthly Ad Spend']);
+//   }
+//   const d = JSON.parse(e.postData.contents);
+//   sheet.appendRow([new Date().toLocaleString('en-IN'),d.name||'',d.phone||'',d.email||'',d.brandName||'',d.brandWebsite||'',d.adSpend||'']);
+//   return ContentService.createTextOutput(JSON.stringify({status:'ok'})).setMimeType(ContentService.MimeType.JSON);
+// }
+// function doGet(){return ContentService.createTextOutput('OK');}
+
+const GSHEET_URL = 'PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+
+function openLF(){
+  document.getElementById('lf-form-step').style.display='';
+  document.getElementById('lf-ty-step').style.display='none';
+  document.getElementById('leadForm').reset();
+  document.querySelectorAll('.lf-err-msg').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.err-input').forEach(e=>e.classList.remove('err-input'));
+  document.getElementById('leadFormOverlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeLF(){
+  document.getElementById('leadFormOverlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+function submitLeadForm(e){
+  e.preventDefault();
+  let ok=true;
+  const name=document.getElementById('lf-name').value.trim();
+  const phone=document.getElementById('lf-phone').value.trim();
+  const website=document.getElementById('lf-website').value.trim();
+  // Validate mandatory fields
+  function setErr(id,errId,show){
+    document.getElementById(id).classList.toggle('err-input',show);
+    document.getElementById(errId).style.display=show?'block':'none';
+    if(show) ok=false;
+  }
+  setErr('lf-name','err-name',!name);
+  setErr('lf-phone','err-phone',phone.length<7);
+  setErr('lf-website','err-website',!website);
+  if(!ok) return;
+
+  const btn=document.getElementById('lf-submit-btn');
+  btn.disabled=true;
+  btn.textContent='Submitting…';
+
+  const payload={
+    name,
+    phone,
+    email:document.getElementById('lf-email').value.trim(),
+    brandName:document.getElementById('lf-brand').value.trim(),
+    brandWebsite:website,
+    adSpend:document.getElementById('lf-adspend').value
+  };
+
+  // Fire Meta Lead event immediately
+  if(typeof fbq!=='undefined') fbq('track','Lead');
+
+  // Send to Google Sheet
+  const sendData=()=>{
+    if(GSHEET_URL && GSHEET_URL!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
+      fetch(GSHEET_URL,{method:'POST',body:JSON.stringify(payload)})
+        .catch(()=>{}); // fail silently — UX not blocked
+    }
+    // Show Thank You step
+    document.getElementById('lf-form-step').style.display='none';
+    document.getElementById('lf-ty-step').style.display='';
+    btn.disabled=false;
+    btn.textContent='Get My Free Audit →';
+  };
+  sendData();
 }
 
 // Popup
