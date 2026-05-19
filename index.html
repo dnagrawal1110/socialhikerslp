@@ -1446,12 +1446,16 @@ function submitLeadForm(e){
   // Fire Meta Lead event immediately
   if(typeof fbq!=='undefined') fbq('track','Lead');
 
-  // Send to Google Sheet via Image pixel — zero CORS issues, same as tracking pixels
+  // Send to Google Sheet via hidden iframe — follows redirects exactly like a browser tab
   const sendData=()=>{
     if(GSHEET_URL && GSHEET_URL!=='PASTE_YOUR_APPS_SCRIPT_URL_HERE'){
       const url=new URL(GSHEET_URL);
       Object.entries(payload).forEach(([k,v])=>url.searchParams.set(k,v));
-      new Image().src=url.toString(); // fires GET silently, Apps Script receives e.parameter
+      const ifr=document.createElement('iframe');
+      ifr.style.cssText='display:none;width:0;height:0;border:0;position:absolute;top:-9999px';
+      ifr.src=url.toString();
+      document.body.appendChild(ifr);
+      setTimeout(()=>{try{document.body.removeChild(ifr);}catch(e){}},8000);
     }
     // Show Thank You step
     document.getElementById('lf-form-step').style.display='none';
